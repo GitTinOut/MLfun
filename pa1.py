@@ -1,4 +1,6 @@
 from knn import KNN
+import pandas as pd
+import numpy as np
 
 model = KNN('pa1train.txt', 'pa1validate.txt', 'pa1test.txt', k = 1)
 print('k = 1')
