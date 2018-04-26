@@ -12,14 +12,23 @@ class KNN:
     def setk(self,new):
         self.k = new
 
-    def predicttrain(self):
+    def error(self, test, size):
         wrong = 0
         """ predict the label of each point in the training dataset using that training dataset"""
-        for i in range(1999):
-            if self.predict(self.train, self.train[i]) == False:
+        for i in range(size):
+            if self.predict(self.train, test[i]) == False:
                 wrong += 1
-        accuracy = wrong/1999
-        print(accuracy)
+        accuracy = wrong/size
+        return accuracy
+
+    def predicttrain(self):
+        print("Training Error:" + str(self.error(self.train, 1999)))
+    
+    def predictvalid(self):
+        print("Validation Error:"+ str(self.error(self.valid, 999)))
+    
+    def predicttest(self):
+        print("Test Error: " + str(self.error(self.test, 999)))
 
     def predict(self, a, point):
         neighbors = dict()
