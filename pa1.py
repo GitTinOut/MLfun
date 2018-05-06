@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import datetime
 
-model = KNN('pa1train.txt', 'pa1validate.txt', 'pa1test.txt', k = 3)
+model = KNN('pa1train.txt', 'pa1validate.txt', 'pa1test.txt', k = 1)
 
 print('k = 1')
 ti = datetime.datetime.now()
