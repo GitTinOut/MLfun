@@ -165,40 +165,21 @@ class Perceptron:
 
         return float(inc/test.shape[0])
     def print_w(self):
-        #print(self.ow.shape)
-        df = pd.DataFrame(self.ow, columns = self.dictionary)
-        #print(df.shape)
-        #print(df)
-        i = self.dictionary[2]
-        #print( len(df[df[i]<0][i]))
-        val2words = {}
-        for i in self.dictionary:
-            count = len(df[df[i] > 0][i])
-            if count == 0:
-                continue
-            val2words[count] = i
-        neg2pos = sorted(val2words.keys())
-        print('most positive words')
-        print(neg2pos[-1])
-        print(val2words[neg2pos[-1]])
-        print(neg2pos[-2])
-        print(val2words[neg2pos[-2]])
-        print(neg2pos[-3])
-        print(val2words[neg2pos[-3]])
+        
+        y = 0
+        val2word = {}
+        for j in range(self.m):
+            y += self.c[j]*self.ow[j]
+        for i in range(y.shape[0]):
+            val2word[y[i]] = i
 
-        val2words = {}
-        for i in self.dictionary:
-            count = len(df[df[i] < 0][i])
-            if count == 0:
-                continue
-            val2words[count] = i
-        neg2pos = sorted(val2words.keys())
-        print('most negative words')
-        print(neg2pos[-1])
-        print(val2words[neg2pos[-1]])
-        print(neg2pos[-2])
-        print(val2words[neg2pos[-2]])
-        print(neg2pos[-3])
-        print(val2words[neg2pos[-3]])
-
-
+        sortedkeys = sorted(val2word.keys())
+        
+        print("most negative")
+        print(self.dictionary[val2word[sortedkeys[0]]])
+        print(self.dictionary[val2word[sortedkeys[1]]])
+        print(self.dictionary[val2word[sortedkeys[2]]])
+        print("most positive")
+        print(self.dictionary[val2word[sortedkeys[-1]]])
+        print(self.dictionary[val2word[sortedkeys[-2]]])
+        print(self.dictionary[val2word[sortedkeys[-3]]])
