@@ -1,4 +1,5 @@
 import pandas as pd
+from collections import Counter
 import numpy as np
 class Perceptron:
     def __init__(self, train, test, p):
@@ -10,21 +11,41 @@ class Perceptron:
     def Kp(self, s, t):
         count = 0
         p = self.p
+        """o_s = dict()
+        o_t = dict()
         for i in range(len(s) - p + 1):
-            if s[i:i+p] in t:
-                count += 1
-            occured = False
-            """
-            for k in range(i):
-                
-                if v == s[k:k+p]:
-                    occured = True
-            if occured == True:
-                continue
-            """
+            sub = s[i:i+p]
+            if sub not in o_s:
+                o_s[sub] = 1
+            else:
+                o_s[sub] += 1
+        
         for j in range(len(t)-p+1):
-            if t[j:j+p] in s:
-                count += 1
+            sub = t[j:j+p]
+            if sub not in o_t:
+                o_t[sub] = 1
+            else:
+                o_t[sub] += 1
+        intersection = list(set(o_s).intersection(set(o_t)))
+
+        for i in intersection:
+            count += o_s[i] * o_t[i]
+        """
+        s_list = []
+        for i in range(len(s)-p+1):
+            s_list.append(s[i:i+p])
+
+        s_set = Counter(s_list)
+        
+        t_list = []
+        for i in range(len(t)-p+1):
+            t_list.append(t[i:i+p])
+        t_set = Counter(t_list)
+
+        for word in t_set:
+            if (word in s_set):
+                count += s_set[word] * t_set[word]
+        
         return count
     # < Wt, Phi(xt) >
     def WtdotPhi(self, t, x):
@@ -32,16 +53,20 @@ class Perceptron:
         s = self.indices
         w = 0
         for i in range(t):
-            w += s[0][i] * train[i][1] * self.Kp(self.train[i][0],x)
+            if s[0][i] == 0:
+                continue
+            xi = train[i][0]
+            y = train[i][1]
+            w += y * self.Kp(xi,x)
         return w
 
     def training(self):
         train = self.train
 
         for i in range(train.shape[0]):
-            print(i)
+            x = train[i][0]
             y = train[i][-1]
-            if i == 0 or y * self.WtdotPhi(i-1,train[i][0]) <= 0:
+            if i == 0 or y * self.WtdotPhi(i,x) <= 0:
                 self.indices[0][i] += 1
 
     
@@ -50,7 +75,9 @@ class Perceptron:
         t = self.train.shape[0]
         inc = 0.0 
         for i in range(test.shape[0]): 
-            if self.sign(self.WtdotPhi(t, test[i][0])) != test[i][1]:
+            x = test[i][0]
+            y = test[i][1]
+            if y * self.WtdotPhi(t, x) <= 0:
                 inc += 1
 
         return float(inc/test.shape[0])
@@ -62,8 +89,3 @@ class Perceptron:
     
     def set_p(self,p):
         self.p = p
-    def sign(self, x):
-        if x < 0:
-            return -1
-        else:
-            return 1
